@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package ulog.pb;
+
+message va_arg {
+    required int32 id = 1;
+    required bytes value = 2;
+}
+
+message message {
+    required uint32 tag = 1;
+    repeated va_arg va_list = 2;
+}
