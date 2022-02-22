@@ -1,0 +1,12 @@
+[submodule "externals/CLI11"]
+	path = externals/CLI11
+	url = https://github.com/CLIUtils/CLI11.git
+[submodule "externals/ELFIO"]
+	path = externals/ELFIO
+	url = https://github.com/serge1/ELFIO.git
+[submodule "externals/json"]
+	path = externals/json
+	url = https://github.com/nlohmann/json.git
+[submodule "externals/nanopb"]
+	path = externals/nanopb
+	url = https://github.com/nanopb/nanopb.git
