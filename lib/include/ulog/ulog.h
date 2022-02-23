@@ -44,7 +44,7 @@ void ulog_deinit(void);
   )
 #define _MAP_ARGS_INNER() MAP_ARGS_INNER
 
-#define ulog(_fmt, ...) \
+#define ULOG_RAW(_fmt, ...) \
 do \
 { \
     static const char fmt[] __attribute__((section(ULOG_SECTION_RODATA))) = _fmt; \
@@ -56,6 +56,11 @@ do \
     ) \
     IF(NOT(HAS_ARGS(__VA_ARGS__)))(ulog_vprintf(tag, NULL, 0);) \
 } while (0)
+
+#define ULOG_DBG(_fmt, ...) ULOG_RAW("DBG: " _fmt "\n", ##__VA_ARGS__)
+#define ULOG_INF(_fmt, ...) ULOG_RAW("INF: " _fmt "\n", ##__VA_ARGS__)
+#define ULOG_WRN(_fmt, ...) ULOG_RAW("WRN: " _fmt "\n", ##__VA_ARGS__)
+#define ULOG_ERR(_fmt, ...) ULOG_RAW("ERR: " _fmt "\n", ##__VA_ARGS__)
 
 #ifdef __cplusplus
 } /* extern "C" */
