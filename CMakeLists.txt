@@ -11,6 +11,8 @@ project(_ulog
 add_subdirectory(externals/pw_tokenizer)
 add_subdirectory(externals/cpp_magic)
 add_subdirectory(externals/CLI11)
+set(JSON_BuildTests OFF)
+set(JSON_Install OFF)
 add_subdirectory(externals/json)
 
 # Make ulog globally available
