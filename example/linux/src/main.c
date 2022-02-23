@@ -9,12 +9,15 @@ int backend_dummy_init(void* arg)
 
 int backend_dummy_tx(uint8_t const* data, size_t size)
 {
-    fwrite(data, 1, size, stdout);
-    // for (size_t i = 0; i < size; i++)
-    // {
-    //     printf("%02X", data[i]);
-    // }
-    // printf("\n");
+    #if 1
+        fwrite(data, 1, size, stdout);
+    #else
+        for (size_t i = 0; i < size; i++)
+        {
+            printf("%02X", data[i]);
+        }
+        printf("\n");
+    #endif
 
     return size;
 }
@@ -42,11 +45,10 @@ int main(int argc, char const *argv[])
               &backend_dummy,
               NULL);
 
-    ulog("%s %s %d\n", "Hello", "World", 0x7E);
-    ulog("Hello World\n");
-    ulog("Hell Boy\n");
-    ulog("Hell Girl\n");
-    ulog("Hell IT\n");
+    ULOG_INF("Hello World");
+    ULOG_DBG("%s %s %d", "Hello", "World", 0x7E);
+    ULOG_WRN("Bad number %d", 42);
+    ULOG_ERR("Bad char %c", '!');
 
     ulog_deinit();
     return 0;
