@@ -3,6 +3,7 @@
 #include "CLI/CLI.hpp"
 #include <cstdio>
 #include <string>
+#include "ulog/ulog.h"
 #include "ulog/ulog_hash.h"
 
 using namespace ELFIO;
@@ -43,7 +44,7 @@ int main(int argc, char const *argv[])
     {
         for(section* sec : elf_file.sections)
         {
-            if (0 == sec->get_name().compare(".ulog_rodata"))
+            if (0 == sec->get_name().compare(ULOG_SECTION_RODATA))
             {
                 char const* section_data = sec->get_data();
                 Elf_Xword section_size = sec->get_size();
