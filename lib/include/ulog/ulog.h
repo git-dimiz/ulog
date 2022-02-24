@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <assert.h>
 #include "cpp_magic.h"
 #include "ulog/ulog_arg.h"
 #include "ulog/ulog_hash.h"
@@ -50,6 +51,7 @@ do \
     static const char fmt[] __attribute__((section(ULOG_SECTION_RODATA))) = _fmt; \
     (void)fmt; \
     static const uint32_t tag = ULOG_HASH(_fmt); \
+    static_assert(tag == 0, "format string is too long"); \
     IF(HAS_ARGS(__VA_ARGS__))( \
         const ulog_arg_t arg_list[] = {MAP_ARGS(ARG_LIST_ENTRY, COMMA, __VA_ARGS__)}; \
         ulog_vprintf(tag, arg_list, sizeof(arg_list) / sizeof(arg_list[0])); \
