@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <assert.h>
 #include "ulog/internal/cpp_magic.h"
 #include "ulog/internal/ulog_arg.h"
 #include "ulog/internal/ulog_hash.h"
@@ -41,6 +42,7 @@ int ulog_init(ulog_config_t const* config, ulog_backend_t const* backend, void* 
 int ulog_vprintf(const uint32_t tag, ulog_arg_t const* arg_list, size_t size);
 void ulog_deinit(void);
 
+#define STATIC_ASSERT_ENTRY(x) static_assert(ULOG_ARG_TYPE_ID_NONE != ulog_arg_type_id(x), "invalid arg")
 #define ARG_LIST_ENTRY(x) (ulog_arg_t){ulog_arg_type_id(x), (ulog_arg_value_t)x}
 #define MAP_ARGS(op,sep,...) \
   IF(HAS_ARGS(__VA_ARGS__))(EVAL(MAP_ARGS_INNER(op,sep,__VA_ARGS__)))
@@ -51,13 +53,20 @@ void ulog_deinit(void);
   )
 #define _MAP_ARGS_INNER() MAP_ARGS_INNER
 
+#ifndef ULOG_ARGS_ASSERT
+    #define ULOG_ARGS_ASSERT(...) MAP_ARGS(STATIC_ASSERT_ENTRY, SEMICOLON, __VA_ARGS__)
+#endif
+
+#define ULOG_ARGS_CREATE(...) {MAP_ARGS(ARG_LIST_ENTRY, COMMA, __VA_ARGS__)}
+
 #define ULOG_RAW(_fmt, ...) do { \
     static const char fmt[] __ulog_rodata = _fmt; \
     ULOG_HASH_STR_ASSERT(_fmt); \
     static const uint32_t tag = ULOG_HASH(_fmt); \
     IF(HAS_ARGS(__VA_ARGS__))( \
         ulog_dummy_printf(fmt, __VA_ARGS__); \
-        const ulog_arg_t arg_list[] = {MAP_ARGS(ARG_LIST_ENTRY, COMMA, __VA_ARGS__)}; \
+        ULOG_ARGS_ASSERT(__VA_ARGS__); \
+        const ulog_arg_t arg_list[] = ULOG_ARGS_CREATE(__VA_ARGS__); \
         ulog_vprintf(tag, arg_list, sizeof(arg_list) / sizeof(arg_list[0])); \
     ) \
     IF(NOT(HAS_ARGS(__VA_ARGS__)))((void)fmt; ulog_vprintf(tag, NULL, 0);) \
