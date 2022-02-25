@@ -18,3 +18,11 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
         ulog
 )
+
+target_compile_options(${PROJECT_NAME}
+    PRIVATE
+        -std=gnu11
+        -O0
+        -Wall
+        -Wextra
+)
