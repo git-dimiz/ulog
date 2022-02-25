@@ -8,8 +8,6 @@ project(_ulog
 )
 
 # Make external libraries globally available
-add_subdirectory(externals/pw_tokenizer)
-add_subdirectory(externals/cpp_magic)
 add_subdirectory(externals/CLI11)
 set(JSON_BuildTests OFF)
 set(JSON_Install OFF)

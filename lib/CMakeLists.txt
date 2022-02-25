@@ -26,11 +26,6 @@ target_include_directories(${PROJECT_NAME}
         "../externals/nanopb"
 )
 
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        cpp_magic
-)
-
 target_compile_features(${PROJECT_NAME}
     PRIVATE
         c_std_11
