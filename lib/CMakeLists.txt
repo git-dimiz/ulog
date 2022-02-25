@@ -28,7 +28,6 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        pw_tokenizer
         cpp_magic
 )
 
