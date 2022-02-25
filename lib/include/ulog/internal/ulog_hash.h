@@ -37,8 +37,9 @@ extern "C" {
 /**
  * @brief Assert if the string is not compliant
  */
-#define ULOG_HASH_STR_ASSERT(_str) static_assert(0 != _CHECK_LEN(sizeof(_str "") - 1, ULOG_HASH_STR_MAX_LEN), "format string is too long");
-
+#ifndef ULOG_HASH_STR_ASSERT
+    #define ULOG_HASH_STR_ASSERT(_str) static_assert(0 != _CHECK_LEN(sizeof(_str "") - 1, ULOG_HASH_STR_MAX_LEN), "format string is too long");
+#endif
 /**
  * @brief compile time impl. of ULOG_HASH_FUNCTION
  * 
