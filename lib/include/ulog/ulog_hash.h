@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <assert.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +33,11 @@ extern "C" {
  * @return _len on succcess otherwise 0
  */
 #define _CHECK_LEN(_len, _max_len) (_len < _max_len ? _len : 0)
+
+/**
+ * @brief Assert if the string is not compliant
+ */
+#define ULOG_HASH_STR_ASSERT(_str) static_assert(0 != _CHECK_LEN(sizeof(_str "") - 1, ULOG_HASH_STR_MAX_LEN), "format string is too long");
 
 /**
  * @brief compile time impl. of ULOG_HASH_FUNCTION
