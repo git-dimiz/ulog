@@ -1,8 +1,8 @@
 #include <stdbool.h>
 
 #include "ulog/ulog.h"
-#include "ulog/ulog_message.pb.h"
-#include "ulog/ulog_encoder.h"
+#include "ulog/internal/ulog_message.pb.h"
+#include "ulog/internal/ulog_encoder.h"
 
 typedef struct
 {

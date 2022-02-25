@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "ulog/ulog_arg.h"
+#include "ulog/internal/ulog_arg.h"
 
 #ifdef __cplusplus
 extern "C" {

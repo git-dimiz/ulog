@@ -1,6 +1,6 @@
 #include "ulog_decoder.hpp"
 #include "ulog_message.hpp"
-#include "ulog/ulog_message.pb.h"
+#include "ulog/internal/ulog_message.pb.h"
 #include "pb_decode.h"
 #include <stdio.h>
 #include <algorithm>

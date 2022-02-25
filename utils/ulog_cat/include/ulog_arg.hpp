@@ -1,7 +1,7 @@
 #ifndef _ULOG_ARG_HPP_
 #define _ULOG_ARG_HPP_
 
-#include "ulog/ulog_arg.h"
+#include "ulog/internal/ulog_arg.h"
 #include <cstdint>
 #include <cstring>
 #include <string>

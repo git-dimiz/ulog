@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "cpp_magic.h"
-#include "ulog/ulog_arg.h"
-#include "ulog/ulog_hash.h"
+#include "ulog/internal/ulog_arg.h"
+#include "ulog/internal/ulog_hash.h"
 #include "ulog/internal/toolchain.h"
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <string>
 #include "ulog/ulog.h"
-#include "ulog/ulog_hash.h"
+#include "ulog/internal/ulog_hash.h"
 
 using namespace ELFIO;
 using json = nlohmann::json;
