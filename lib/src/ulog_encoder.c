@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include "pb_encode.h"
-#include "ulog/internal/ulog_message.pb.h"
+#include "ulog_msg.pb.h"
 #include "ulog/internal/ulog_encoder.h"
 
 typedef struct
@@ -80,7 +80,7 @@ static bool encode_va_arg(pb_ostream_t *stream, const pb_field_t *field, void * 
 
 static bool encode_va_list(pb_ostream_t *stream, const pb_field_t *field, void * const *arg)
 {
-    ulog_message_payload_t const* payload = (ulog_message_payload_t const*)*arg; 
+    ulog_msg_payload_t const* payload = (ulog_msg_payload_t const*)*arg; 
     bool success = true;
 
     for (size_t i = 0; i < payload->va_list.size && true == success; i++)
@@ -123,15 +123,16 @@ int ulog_encoder_message_start(ulog_encoder_t* encoder, uint8_t* data, size_t si
     return success;
 }
 
-int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_message_payload_t const* payload)
+int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_msg_payload_t const* payload)
 {
     int success = -1;
 
     if (NULL != encoder 
         && NULL != payload)
     {
-        ulog_pb_message msg = {
+        ulog_pb_msg msg = {
             .tag = payload->tag,
+            .ch = 1,
             .va_list = {
                 .funcs = {
                     .encode = encode_va_list,
@@ -153,7 +154,7 @@ int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_message_payload_t 
             .errmsg = NULL,
         };
 
-        if (true == pb_encode_delimited(&stream, ulog_pb_message_fields, &msg))
+        if (true == pb_encode_delimited(&stream, ulog_pb_msg_fields, &msg))
         {
             encoder->size += (uint8_t*)itr.begin - encoder->raw_data;
             success = 0;

@@ -1,6 +1,6 @@
 #include "ulog_decoder.hpp"
 #include "ulog_message.hpp"
-#include "ulog/internal/ulog_message.pb.h"
+#include "ulog_msg.pb.h"
 #include "pb_decode.h"
 #include <stdio.h>
 #include <algorithm>
@@ -87,7 +87,7 @@ int ulog_decoder::decode(std::deque<std::uint8_t>& data)
             .errmsg = NULL,
         };
 
-        ulog_pb_message msg = {
+        ulog_pb_msg msg = {
             .tag = 0,
             .va_list = {
                 .funcs = {
@@ -97,7 +97,7 @@ int ulog_decoder::decode(std::deque<std::uint8_t>& data)
             },
         };
 
-        if (true == pb_decode_delimited(&istream, ulog_pb_message_fields, &msg))
+        if (true == pb_decode_delimited(&istream, ulog_pb_msg_fields, &msg))
         {
             _message = std::move(ulog_message(msg.tag, va_list));
             success = start - std::begin(data); 
@@ -121,7 +121,7 @@ int ulog_decoder::decode(std::uint8_t* data, std::size_t size)
 
     std::vector<ulog_arg> va_list;
 
-    ulog_pb_message msg = {
+    ulog_pb_msg msg = {
         .tag = 0,
         .va_list = {
             .funcs = {
@@ -131,7 +131,7 @@ int ulog_decoder::decode(std::uint8_t* data, std::size_t size)
         },
     };
 
-    if (true == pb_decode(&istream, ulog_pb_message_fields, &msg))
+    if (true == pb_decode(&istream, ulog_pb_msg_fields, &msg))
     {
         _message = std::move(ulog_message(msg.tag, va_list));
     }

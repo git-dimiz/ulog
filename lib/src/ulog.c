@@ -1,7 +1,7 @@
 #include <stdbool.h>
 
 #include "ulog/ulog.h"
-#include "ulog/internal/ulog_message.pb.h"
+#include "ulog_msg.pb.h"
 #include "ulog/internal/ulog_encoder.h"
 
 typedef struct
@@ -57,7 +57,7 @@ int ulog_vprintf(const uint32_t tag, ulog_arg_t const* arg_list, size_t size)
                                            ulog.encode_buffer.data,
                                            ulog.encode_buffer.max_size) 
         && 0 == ulog_encoder_message_encode(&encoder, 
-                                            &(ulog_message_payload_t){
+                                            &(ulog_msg_payload_t){
                                                 .tag = tag,
                                                 .va_list = {
                                                     .data = arg_list,

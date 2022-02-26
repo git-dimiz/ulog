@@ -11,7 +11,7 @@ add_library(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        "src/ulog_message.pb.c"
+        "src/gen/ulog_msg.pb.c"
         "src/ulog_encoder.c"
         "src/ulog.c"
         "../externals/nanopb/pb_common.c"
@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         "include"
+        "src/gen"
     PRIVATE
         "include/ulog"
         "../externals/nanopb"

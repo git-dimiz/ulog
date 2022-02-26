@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "ulog/internal/ulog_arg.h"
+#include "ulog/internal/ulog_msg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,19 +16,8 @@ typedef struct
     size_t size;
 } ulog_encoder_t;
 
-typedef struct 
-{
-    uint32_t tag;
-    struct 
-    {
-        ulog_arg_t const* data;
-        size_t size;
-    } va_list;
-} ulog_message_payload_t;
-
-
 int ulog_encoder_message_start(ulog_encoder_t* encoder, uint8_t* data, size_t size);
-int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_message_payload_t const* payload);
+int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_msg_payload_t const* payload);
 int ulog_encoder_message_end(ulog_encoder_t* encoder, uint8_t** data, size_t* size);
 
 #ifdef __cplusplus
