@@ -29,3 +29,8 @@ target_link_libraries(${PROJECT_NAME}
         CLI11
         nlohmann_json
 )
+
+target_compile_features(${PROJECT_NAME}
+    PRIVATE
+        cxx_std_17
+)

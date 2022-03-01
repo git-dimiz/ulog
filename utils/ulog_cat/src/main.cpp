@@ -75,6 +75,52 @@ static void ulog_message_vfprintf(std::FILE* file, char const* fmt, std::vector<
     }
 }
 
+static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list)
+{
+    if (1 == va_list.size()
+        && ULOG_ARG_TYPE_ID_PTR == va_list.at(0).id()
+        && 0 < va_list.at(0).size())
+    {
+        std::uint8_t* buffer = va_list.at(0).value().ptr_u8;
+        size_t len = (size_t)va_list.at(0).size();
+        const size_t line_width = 8;
+
+        size_t i = 0;
+        printf("%08zX  ", i);
+        for (i = 0; i < len; ++i)
+        {
+            if (0 != i && 0 == (i % line_width))
+            {
+                printf("|");
+                for (size_t ii = 0; ii < line_width; ii++)
+                {
+                    printf("%c", isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.');
+                }
+                printf("|");
+                printf("\n");
+                printf("%08zX  ", i);
+            }
+            printf("%02X ", buffer[i]);
+        }
+
+        for (size_t j = 0; j < line_width - (i % line_width); j++)
+        {
+            printf("   ");
+        }
+        printf("|");
+        for (size_t ii = 0; ii < (i % line_width); ii++)
+        {
+            printf("%c", isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.');
+        }
+        for (size_t ii = 0; ii < line_width - (i % line_width); ii++)
+        {
+            printf(" ");
+        }
+        printf("|");
+        printf("\n");
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     std::array<std::uint8_t, 1024> buffer;
@@ -183,7 +229,12 @@ int main(int argc, char const *argv[])
                 if (0 < decoded)
                 {
                     ulog_message& msg = message_decoder.message();
-                    if (std::end(message_map) != message_map.find(msg.tag()))
+
+                    if (ULOG_MSG_TYPE_HEXDUMP == msg.type())
+                    {
+                        ulog_message_hexdump(output_file, msg.va_list());
+                    } 
+                    else if (std::end(message_map) != message_map.find(msg.tag()))
                     {
                         ulog_message_vfprintf(output_file, message_map[msg.tag()].c_str(), msg.va_list());
                     }

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <unistd.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -101,6 +102,7 @@ typedef struct
 {
     ulog_arg_type_id_t id;
     ulog_arg_value_t value;
+    ssize_t size;
 } ulog_arg_t;
 
 #ifdef __cplusplus

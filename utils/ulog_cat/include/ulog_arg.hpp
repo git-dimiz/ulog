@@ -5,12 +5,15 @@
 #include <cstdint>
 #include <cstring>
 #include <string>
+#include <vector>
+#include <unistd.h>
 
 class ulog_arg
 {
 private:
     ulog_arg_t arg;
     std::string str;
+    std::vector<std::uint8_t> buf;
 public:
     ulog_arg(ulog_arg_type_id_t id, std::uint8_t const* value, size_t size)
     {
@@ -21,6 +24,10 @@ public:
         {
             str = std::string((char*)value, size);
         }
+        else if(ULOG_ARG_TYPE_ID_PTR == id)
+        {
+            buf.assign((std::uint8_t*)value, ((std::uint8_t*)value) + size);
+        }   
         else
         {
             std::memcpy(&arg.value, value, size);
@@ -31,10 +38,24 @@ public:
     {
         if (ULOG_ARG_TYPE_ID_PTR_STR == arg.id)
         {
-            char const* ptr = str.c_str();
-            std::memcpy(&arg.value, &ptr, sizeof(void*));
-        }  
+            arg.value.cstr = str.c_str();
+        }
+        else if (ULOG_ARG_TYPE_ID_PTR == arg.id)
+        {
+            arg.value.ptr_u8 = buf.data();
+        }
         return arg.value;
+    }
+
+    ssize_t size(void)
+    {
+        if (ULOG_ARG_TYPE_ID_PTR == arg.id
+            && 0 != buf.size())
+        {
+            return buf.size();
+        }
+
+        return -1;
     }
 
     ulog_arg_type_id_t id(void)

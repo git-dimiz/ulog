@@ -89,6 +89,7 @@ int ulog_decoder::decode(std::deque<std::uint8_t>& data)
 
         ulog_pb_msg msg = {
             .tag = 0,
+            .ch = 0,
             .va_list = {
                 .funcs = {
                     .decode = decode_va_list,
@@ -99,7 +100,7 @@ int ulog_decoder::decode(std::deque<std::uint8_t>& data)
 
         if (true == pb_decode_delimited(&istream, ulog_pb_msg_fields, &msg))
         {
-            _message = std::move(ulog_message(msg.tag, va_list));
+            _message = std::move(ulog_message(msg.tag, msg.ch, va_list));
             success = start - std::begin(data); 
         }
         else
@@ -133,7 +134,7 @@ int ulog_decoder::decode(std::uint8_t* data, std::size_t size)
 
     if (true == pb_decode(&istream, ulog_pb_msg_fields, &msg))
     {
-        _message = std::move(ulog_message(msg.tag, va_list));
+        _message = std::move(ulog_message(msg.tag, msg.ch, va_list));
     }
 
     return 0;

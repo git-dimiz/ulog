@@ -62,8 +62,15 @@ static bool encode_va_arg(pb_ostream_t *stream, const pb_field_t *field, void * 
                 success = pb_encode_string(stream, (pb_byte_t const*)&uarg->value.u64, sizeof(uint64_t));
                 break;
             case ULOG_ARG_TYPE_ID_PTR:
-                /* TODO needs test */
-                success = pb_encode_string(stream, (pb_byte_t const*)&uarg->value.ptr_v, sizeof(void*));
+                if (0 > uarg->size)
+                {
+                    // TODO test
+                    success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, sizeof(void*));
+                }
+                else
+                {
+                    success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, uarg->size);
+                }
                 break;
             case ULOG_ARG_TYPE_ID_PTR_STR:
                 success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.str, strlen(uarg->value.str));
@@ -132,7 +139,7 @@ int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_msg_payload_t cons
     {
         ulog_pb_msg msg = {
             .tag = payload->tag,
-            .ch = 1,
+            .ch = payload->ch,
             .va_list = {
                 .funcs = {
                     .encode = encode_va_list,

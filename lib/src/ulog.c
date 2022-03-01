@@ -43,7 +43,7 @@ void ulog_deinit(void)
 }
 
 
-int ulog_vprintf(const uint32_t tag, ulog_arg_t const* arg_list, size_t size)
+int ulog_print(const ulog_msg_ch_t ch, const uint32_t tag, ulog_arg_t const* arg_list, size_t size)
 {
     uint8_t* p = NULL;
     size_t s = 0;
@@ -59,6 +59,7 @@ int ulog_vprintf(const uint32_t tag, ulog_arg_t const* arg_list, size_t size)
         && 0 == ulog_encoder_message_encode(&encoder, 
                                             &(ulog_msg_payload_t){
                                                 .tag = tag,
+                                                .ch = ch,
                                                 .va_list = {
                                                     .data = arg_list,
                                                     .size = size,
