@@ -82,7 +82,7 @@ void ulog_deinit(void);
 
 #define ULOG_HEXDUMP(_ch, _buffer, _size, _fmt, ...) do { \
     ULOG_PRINT(ULOG_MSG_CH_ENCODE(ULOG_MSG_TYPE_PRINT, ULOG_MSG_CH_LVL_GET(_ch)), _fmt, ##__VA_ARGS__); \
-    ulog_hexdump(_ch, 0, &(ulog_arg_t) { ulog_arg_type_id((uint8_t const*)_buffer), { .cptr_u8 = (uint8_t const*)_buffer }, _size }); \
+    ulog_hexdump(_ch, 0, &(ulog_arg_t) { ULOG_ARG_TYPE_ID_BUFFER, { .cptr_u8 = (uint8_t const*)_buffer }, _size }); \
 } while (0)
 
 #define ULOG_DBG(_fmt, ...) ULOG_PRINT(ULOG_MSG_CH_PRINT_DBG, _fmt "\n", ##__VA_ARGS__)

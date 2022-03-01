@@ -24,10 +24,10 @@ public:
         {
             str = std::string((char*)value, size);
         }
-        else if(ULOG_ARG_TYPE_ID_PTR == id)
+        else if(ULOG_ARG_TYPE_ID_BUFFER == id)
         {
             buf.assign((std::uint8_t*)value, ((std::uint8_t*)value) + size);
-        }   
+        }
         else
         {
             std::memcpy(&arg.value, value, size);
@@ -40,7 +40,7 @@ public:
         {
             arg.value.cstr = str.c_str();
         }
-        else if (ULOG_ARG_TYPE_ID_PTR == arg.id)
+        else if (ULOG_ARG_TYPE_ID_BUFFER == arg.id)
         {
             arg.value.ptr_u8 = buf.data();
         }
@@ -49,7 +49,7 @@ public:
 
     ssize_t size(void)
     {
-        if (ULOG_ARG_TYPE_ID_PTR == arg.id
+        if (ULOG_ARG_TYPE_ID_BUFFER == arg.id
             && 0 != buf.size())
         {
             return buf.size();

@@ -16,6 +16,7 @@ typedef enum {
     ULOG_ARG_TYPE_ID_U64,
     ULOG_ARG_TYPE_ID_PTR,
     ULOG_ARG_TYPE_ID_PTR_STR,
+    ULOG_ARG_TYPE_ID_BUFFER,
     ULOG_ARG_TYPE_ID_NONE = -1,
 } ulog_arg_type_id_t;
 

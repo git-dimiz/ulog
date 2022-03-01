@@ -45,12 +45,14 @@ int main(int argc, char const *argv[])
               &backend_dummy,
               NULL);
 
+    void* ptr = (void*)0xAABBCCDD;
+    ULOG_DBG("Pointer = %p", ptr);
     ULOG_INF("Hello World");
     ULOG_DBG("%s %s %d", "Hello", "World", 0x7E);
     ULOG_WRN("Bad number %d", 42);
     ULOG_ERR("Bad char %c", '!');
 
-    char const exmpl_buffer[] = "dummy buffer content";
+    char const exmpl_buffer[] = "AAAAAAAAAAAAAAAAAAAAAA";
     ULOG_HEXDUMP_DBG(exmpl_buffer, sizeof(exmpl_buffer), "This is very important data");
 
     ulog_deinit();

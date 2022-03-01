@@ -78,7 +78,7 @@ static void ulog_message_vfprintf(std::FILE* file, char const* fmt, std::vector<
 static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list)
 {
     if (1 == va_list.size()
-        && ULOG_ARG_TYPE_ID_PTR == va_list.at(0).id()
+        && ULOG_ARG_TYPE_ID_BUFFER == va_list.at(0).id()
         && 0 < va_list.at(0).size())
     {
         std::uint8_t* buffer = va_list.at(0).value().ptr_u8;

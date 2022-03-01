@@ -62,15 +62,10 @@ static bool encode_va_arg(pb_ostream_t *stream, const pb_field_t *field, void * 
                 success = pb_encode_string(stream, (pb_byte_t const*)&uarg->value.u64, sizeof(uint64_t));
                 break;
             case ULOG_ARG_TYPE_ID_PTR:
-                if (0 > uarg->size)
-                {
-                    // TODO test
-                    success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, sizeof(void*));
-                }
-                else
-                {
-                    success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, uarg->size);
-                }
+                success = pb_encode_string(stream, (pb_byte_t const*)&uarg->value.ptr_v, sizeof(void*));
+                break;
+            case ULOG_ARG_TYPE_ID_BUFFER:
+                success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, uarg->size);
                 break;
             case ULOG_ARG_TYPE_ID_PTR_STR:
                 success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.str, strlen(uarg->value.str));
