@@ -86,38 +86,42 @@ static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list
         const size_t line_width = 8;
 
         size_t i = 0;
-        printf("%08zX  ", i);
+        std::fprintf(file, "%08zX  ", i);
         for (i = 0; i < len; ++i)
         {
             if (0 != i && 0 == (i % line_width))
             {
-                printf("|");
+                std::fputc('|', file);
                 for (size_t ii = 0; ii < line_width; ii++)
                 {
-                    printf("%c", isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.');
+                    std::fputc(isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.', file);
                 }
-                printf("|");
-                printf("\n");
-                printf("%08zX  ", i);
+                std::fputc('|', file);
+                std::fputc('\n', file);
+                std::fprintf(file, "%08zX  ", i);
             }
-            printf("%02X ", buffer[i]);
+            std::fprintf(file, "%02X ", buffer[i]);
         }
 
         for (size_t j = 0; j < line_width - (i % line_width); j++)
         {
-            printf("   ");
+            std::fputs("   ", file);
         }
-        printf("|");
+        std::fputc('|', file);
         for (size_t ii = 0; ii < (i % line_width); ii++)
         {
-            printf("%c", isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.');
+            std::fputc(isprint(buffer[i - line_width + ii]) ? buffer[i - line_width + ii] : '.', file);
         }
         for (size_t ii = 0; ii < line_width - (i % line_width); ii++)
         {
-            printf(" ");
+            std::fputc(' ', file);
         }
-        printf("|");
-        printf("\n");
+        std::fputc('|', file);
+        std::fputc('\n', file);
+    }
+    else
+    {
+        std::fprintf(file, "hexdump failed\n");
     }
 }
 
