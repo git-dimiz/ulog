@@ -25,4 +25,6 @@ target_compile_options(${PROJECT_NAME}
         -O0
         -Wall
         -Wextra
+        -Wpedantic
+        -Wno-gnu-zero-variadic-macro-arguments
 )
