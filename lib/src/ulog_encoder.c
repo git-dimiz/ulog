@@ -65,7 +65,7 @@ static bool encode_va_arg(pb_ostream_t *stream, const pb_field_t *field, void * 
                 success = pb_encode_string(stream, (pb_byte_t const*)&uarg->value.ptr_v, sizeof(void*));
                 break;
             case ULOG_ARG_TYPE_ID_BUFFER:
-                success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, uarg->size);
+                success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.ptr_v, (size_t)uarg->size);
                 break;
             case ULOG_ARG_TYPE_ID_PTR_STR:
                 success = pb_encode_string(stream, (pb_byte_t const*)uarg->value.str, strlen(uarg->value.str));
@@ -134,7 +134,7 @@ int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_msg_payload_t cons
     {
         ulog_pb_msg msg = {
             .tag = payload->tag,
-            .ch = payload->ch,
+            .ch = (uint32_t)payload->ch,
             .va_list = {
                 .funcs = {
                     .encode = encode_va_list,
@@ -158,7 +158,7 @@ int ulog_encoder_message_encode(ulog_encoder_t* encoder, ulog_msg_payload_t cons
 
         if (true == pb_encode_delimited(&stream, ulog_pb_msg_fields, &msg))
         {
-            encoder->size += (uint8_t*)itr.begin - encoder->raw_data;
+            encoder->size += (size_t)((uint8_t*)itr.begin - encoder->raw_data);
             success = 0;
         }
     }

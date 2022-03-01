@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ulog/ulog.h"
+#include <stdint.h>
 
 int backend_dummy_init(void* arg)
 {
@@ -19,7 +20,7 @@ int backend_dummy_tx(uint8_t const* data, size_t size)
         printf("\n");
     #endif
 
-    return size;
+    return (int)size;
 }
 
 void backend_dummy_deinit(void)

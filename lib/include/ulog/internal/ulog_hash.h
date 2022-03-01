@@ -325,7 +325,7 @@ extern "C" {
 static inline uint32_t ulog_hash(char const* str, size_t len)
 {
 
-    uint32_t hash = len;
+    uint32_t hash = (uint32_t)len;
     const uint32_t seed = 65599;
     uint32_t coefficient = seed;
 
