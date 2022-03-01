@@ -50,6 +50,9 @@ int main(int argc, char const *argv[])
     ULOG_WRN("Bad number %d", 42);
     ULOG_ERR("Bad char %c", '!');
 
+    char const exmpl_buffer[] = "dummy buffer content";
+    ULOG_HEXDUMP_DBG(exmpl_buffer, sizeof(exmpl_buffer), "This is very important data");
+
     ulog_deinit();
     return 0;
 }
