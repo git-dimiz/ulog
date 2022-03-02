@@ -10,7 +10,40 @@
 
 using json = nlohmann::json;
 
-static void ulog_message_vfprintf(std::FILE* file, char const* fmt, std::vector<ulog_arg>& va_list)
+static void color_section_enter(std::FILE* file, std::uint32_t lvl)
+{
+    char const* color = "";
+    switch (lvl)
+    {
+        case ULOG_MSG_LVL_INF: color = "\033[0;32m"; /* green */ break;
+        case ULOG_MSG_LVL_WRN: color = "\033[0;33m"; /* yellow */ break;
+        case ULOG_MSG_LVL_ERR: color = "\033[0;31m"; /* red */ break;
+        case ULOG_MSG_LVL_DBG:
+        default: break;
+    }
+    fputs(color, file);
+}
+
+static void color_section_exit(std::FILE* file)
+{
+    fputs("\033[0m", file);
+}
+
+static void log_lvl_prefix(std::FILE* file, std::uint32_t lvl)
+{
+    char const* prefix = "";
+    switch (lvl)
+    {
+        case ULOG_MSG_LVL_DBG: prefix = "DBG: "; break;
+        case ULOG_MSG_LVL_INF: prefix = "INF: "; break;
+        case ULOG_MSG_LVL_WRN: prefix = "WRN: "; break;
+        case ULOG_MSG_LVL_ERR: prefix = "ERR: "; break;
+        default: break;
+    }
+    fputs(prefix, file);
+}
+
+static void ulog_message_vfprintf(std::FILE* file, std::uint32_t lvl, char const* fmt, std::vector<ulog_arg>& va_list)
 {
     char const* start = NULL;
     char const* end = NULL;
@@ -22,6 +55,8 @@ static void ulog_message_vfprintf(std::FILE* file, char const* fmt, std::vector<
         'G', 'c', 's', 'p',
     };
 
+    color_section_enter(file, lvl);
+    log_lvl_prefix(file, lvl);
     while (*fmt)
     {
         if ('%' == *fmt)
@@ -73,9 +108,10 @@ static void ulog_message_vfprintf(std::FILE* file, char const* fmt, std::vector<
 
         fmt++;
     }
+    color_section_exit(file);
 }
 
-static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list)
+static void ulog_message_hexdump(std::FILE* file, std::uint32_t lvl, std::vector<ulog_arg>& va_list)
 {
     if (1 == va_list.size()
         && ULOG_ARG_TYPE_ID_BUFFER == va_list.at(0).id()
@@ -86,6 +122,8 @@ static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list
         const size_t line_width = 8;
 
         size_t i = 0;
+        color_section_enter(file, lvl);
+        log_lvl_prefix(file, lvl);
         std::fprintf(file, "%08zX  ", i);
         for (i = 0; i < len; ++i)
         {
@@ -98,6 +136,7 @@ static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list
                 }
                 std::fputc('|', file);
                 std::fputc('\n', file);
+                log_lvl_prefix(file, lvl);
                 std::fprintf(file, "%08zX  ", i);
             }
             std::fprintf(file, "%02X ", buffer[i]);
@@ -118,6 +157,7 @@ static void ulog_message_hexdump(std::FILE* file, std::vector<ulog_arg>& va_list
         }
         std::fputc('|', file);
         std::fputc('\n', file);
+        color_section_exit(file);
     }
     else
     {
@@ -236,11 +276,11 @@ int main(int argc, char const *argv[])
 
                     if (ULOG_MSG_TYPE_HEXDUMP == msg.type())
                     {
-                        ulog_message_hexdump(output_file, msg.va_list());
+                        ulog_message_hexdump(output_file, msg.level(), msg.va_list());
                     } 
                     else if (std::end(message_map) != message_map.find(msg.tag()))
                     {
-                        ulog_message_vfprintf(output_file, message_map[msg.tag()].c_str(), msg.va_list());
+                        ulog_message_vfprintf(output_file, msg.level(), message_map[msg.tag()].c_str(), msg.va_list());
                     }
                     raw_message_queue.erase(std::begin(raw_message_queue), 
                                             std::begin(raw_message_queue) + decoded);
