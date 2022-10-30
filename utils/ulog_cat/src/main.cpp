@@ -142,7 +142,7 @@ static void ulog_message_hexdump(std::FILE* file, std::uint32_t lvl, std::vector
             std::fprintf(file, "%02X ", buffer[i]);
         }
 
-        for (size_t j = 0; j < line_width - (i % line_width); j++)
+        for (size_t j = 0; j < line_width - (i % line_width) && 0 != (i % line_width); j++)
         {
             std::fputs("   ", file);
         }
@@ -247,7 +247,7 @@ int main(int argc, char const *argv[])
             {
                 std::fprintf(stderr, "invalid json\n");
                 success = -1;
-            }            
+            }
         }
         else
         {
@@ -259,7 +259,7 @@ int main(int argc, char const *argv[])
     if (0 == success)
     {
         do
-        {   
+        {
             size_t read = std::fread(buffer.data(), 1, buffer.size(), input_file);
             if (read)
             {
@@ -277,20 +277,21 @@ int main(int argc, char const *argv[])
                     if (ULOG_MSG_TYPE_HEXDUMP == msg.type())
                     {
                         ulog_message_hexdump(output_file, msg.level(), msg.va_list());
-                    } 
+                    }
                     else if (std::end(message_map) != message_map.find(msg.tag()))
                     {
                         ulog_message_vfprintf(output_file, msg.level(), message_map[msg.tag()].c_str(), msg.va_list());
                     }
-                    raw_message_queue.erase(std::begin(raw_message_queue), 
+                    raw_message_queue.erase(std::begin(raw_message_queue),
                                             std::begin(raw_message_queue) + decoded);
-                } else if (0 > decoded)
+                }
+                else if (0 > decoded)
                 {
-                    raw_message_queue.erase(std::begin(raw_message_queue), 
+                    raw_message_queue.erase(std::begin(raw_message_queue),
                                             std::begin(raw_message_queue) + (decoded * -1));
                 }
             }
-        } while (std::ferror(input_file) && !std::feof(input_file));
+        } while (0 == std::ferror(input_file) && false == std::feof(input_file));
     }
 
     if (NULL != input_file)
