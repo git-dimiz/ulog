@@ -37,7 +37,7 @@ typedef struct
 /**
  * @brief printf like function to force the compiler to check the format string
  */
-static inline __printf_like(1, 2) void ulog_dummy_printf(char const* fmt, ...) { (void)fmt; }
+static inline __printf_like(1, 2) void ulog_dummy_printf(volatile char const* fmt, ...) { (void)fmt; }
 
 int ulog_init(ulog_config_t const* config, ulog_backend_t const* backend, void* backend_arg);
 int ulog_print(const ulog_msg_ch_t ch, const uint32_t tag, ulog_arg_t const* arg_list, size_t size);
@@ -68,7 +68,7 @@ void ulog_deinit(void);
 
 #define ULOG_PRINT(_ch, _fmt, ...) do { \
     ULOG_HASH_STR_ASSERT(_fmt); \
-    static const char _ulog_fmt[] __ulog_rodata = _fmt; \
+    static const volatile char _ulog_fmt[] __ulog_rodata = _fmt; \
     static const uint32_t _ulog_tag = ULOG_HASH(_fmt); \
     const ulog_msg_ch_t _ulog_ch = _ch; \
     IF(HAS_ARGS(__VA_ARGS__))( \
