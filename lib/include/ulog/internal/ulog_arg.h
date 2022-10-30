@@ -20,43 +20,50 @@ typedef enum {
     ULOG_ARG_TYPE_ID_NONE = -1,
 } ulog_arg_type_id_t;
 
-#define ulog_arg_type_id(v) _Generic(v, \
-    uint8_t     : ULOG_ARG_TYPE_ID_U8, \
-    uint16_t    : ULOG_ARG_TYPE_ID_U16, \
-    uint32_t    : ULOG_ARG_TYPE_ID_U32, \
-    uint64_t    : ULOG_ARG_TYPE_ID_U64, \
-    int8_t      : ULOG_ARG_TYPE_ID_U8, \
-    int16_t     : ULOG_ARG_TYPE_ID_U16, \
-    int32_t     : ULOG_ARG_TYPE_ID_U32, \
-    int64_t     : ULOG_ARG_TYPE_ID_U64, \
-    float       : ULOG_ARG_TYPE_ID_U32, \
-    double      : ULOG_ARG_TYPE_ID_U64, \
-    uint8_t*    : ULOG_ARG_TYPE_ID_PTR, \
-    uint16_t*   : ULOG_ARG_TYPE_ID_PTR, \
-    uint32_t*   : ULOG_ARG_TYPE_ID_PTR, \
-    uint64_t*   : ULOG_ARG_TYPE_ID_PTR, \
-    int8_t*     : ULOG_ARG_TYPE_ID_PTR, \
-    int16_t*    : ULOG_ARG_TYPE_ID_PTR, \
-    int32_t*    : ULOG_ARG_TYPE_ID_PTR, \
-    int64_t*    : ULOG_ARG_TYPE_ID_PTR, \
-    float*      : ULOG_ARG_TYPE_ID_PTR, \
-    double*     : ULOG_ARG_TYPE_ID_PTR, \
-    uint8_t const*  : ULOG_ARG_TYPE_ID_PTR, \
-    uint16_t const* : ULOG_ARG_TYPE_ID_PTR, \
-    uint32_t const* : ULOG_ARG_TYPE_ID_PTR, \
-    uint64_t const* : ULOG_ARG_TYPE_ID_PTR, \
-    int8_t const*   : ULOG_ARG_TYPE_ID_PTR, \
-    int16_t const*  : ULOG_ARG_TYPE_ID_PTR, \
-    int32_t const*  : ULOG_ARG_TYPE_ID_PTR, \
-    int64_t const*  : ULOG_ARG_TYPE_ID_PTR, \
-    float const*    : ULOG_ARG_TYPE_ID_PTR, \
-    double const*   : ULOG_ARG_TYPE_ID_PTR, \
-    void*           : ULOG_ARG_TYPE_ID_PTR, \
-    void const*     : ULOG_ARG_TYPE_ID_PTR, \
-    char*       : ULOG_ARG_TYPE_ID_PTR_STR, \
-    char const* : ULOG_ARG_TYPE_ID_PTR_STR, \
-    default     : ULOG_ARG_TYPE_ID_NONE \
-)
+#define ULOG_ARG_TYPE_ID_OF(_type) (sizeof(_type) == 8 ? ULOG_ARG_TYPE_ID_U64 \
+                                    : sizeof(_type) == 4 ? ULOG_ARG_TYPE_ID_U32 \
+                                    : sizeof(_type) == 2 ? ULOG_ARG_TYPE_ID_U16 \
+                                    : sizeof(_type) == 1 ? ULOG_ARG_TYPE_ID_U8 \
+                                    : ULOG_ARG_TYPE_ID_NONE)
+
+#define ulog_arg_type_id(x) _Generic(x, int : ULOG_ARG_TYPE_ID_OF(int), \
+    default : _Generic(x, unsigned char  : ULOG_ARG_TYPE_ID_OF(unsigned char), \
+    default : _Generic(x, uint8_t  : ULOG_ARG_TYPE_ID_OF(uint8_t), \
+    default : _Generic(x, uint16_t : ULOG_ARG_TYPE_ID_OF(uint16_t), \
+    default : _Generic(x, uint32_t : ULOG_ARG_TYPE_ID_OF(uint32_t), \
+    default : _Generic(x, uint64_t : ULOG_ARG_TYPE_ID_OF(uint64_t), \
+    default : _Generic(x, char     : ULOG_ARG_TYPE_ID_OF(char), \
+    default : _Generic(x, int8_t   : ULOG_ARG_TYPE_ID_OF(int8_t), \
+    default : _Generic(x, int16_t  : ULOG_ARG_TYPE_ID_OF(int16_t), \
+    default : _Generic(x, int32_t  : ULOG_ARG_TYPE_ID_OF(int32_t), \
+    default : _Generic(x, int64_t  : ULOG_ARG_TYPE_ID_OF(int64_t), \
+    default : _Generic(x, float    : ULOG_ARG_TYPE_ID_OF(float), \
+    default : _Generic(x, double   : ULOG_ARG_TYPE_ID_OF(double), \
+    default : _Generic(x, uint8_t*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint16_t* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint32_t* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint64_t* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int8_t*   : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int16_t*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int32_t*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int64_t*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, float*    : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, double*   : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint8_t const*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint16_t const* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint32_t const* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, uint64_t const* : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int8_t const*   : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int16_t const*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int32_t const*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, int64_t const*  : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, float const*    : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, double const*   : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, void*           : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, void const*     : ULOG_ARG_TYPE_ID_PTR, \
+    default : _Generic(x, char*       : ULOG_ARG_TYPE_ID_PTR_STR, \
+    default : _Generic(x, char const* : ULOG_ARG_TYPE_ID_PTR_STR, \
+    default : ULOG_ARG_TYPE_ID_NONE)))))))))))))))))))))))))))))))))))))
 
 typedef union ulog_arg_value_u
 {
