@@ -9,4 +9,8 @@
     #define __section(_name) __attribute__((section(_name)))
 #endif
 
+#ifndef __used_section
+    #define __used_section(_name) __attribute__((used, section(_name)))
+#endif
+
 #endif

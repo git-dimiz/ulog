@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 #define ULOG_SECTION_RODATA ".ulog_rodata"
-#define __ulog_rodata __section(ULOG_SECTION_RODATA)
+#define __ulog_rodata __used_section(ULOG_SECTION_RODATA)
 
 typedef int (*ulog_backend_handle_init_t)(void* arg);
 typedef int (*ulog_backend_handle_tx_t)(uint8_t const* data, size_t size);
@@ -37,7 +37,7 @@ typedef struct
 /**
  * @brief printf like function to force the compiler to check the format string
  */
-static inline __printf_like(1, 2) void ulog_dummy_printf(volatile char const* fmt, ...) { (void)fmt; }
+static inline __printf_like(1, 2) void ulog_dummy_printf(char const* fmt, ...) { (void)fmt; }
 
 int ulog_init(ulog_config_t const* config, ulog_backend_t const* backend, void* backend_arg);
 int ulog_print(const ulog_msg_ch_t ch, const uint32_t tag, ulog_arg_t const* arg_list, size_t size);
@@ -68,11 +68,11 @@ void ulog_deinit(void);
 
 #define ULOG_PRINT(_ch, _fmt, ...) do { \
     ULOG_HASH_STR_ASSERT(_fmt); \
-    static const volatile char _ulog_fmt[] __ulog_rodata = _fmt; \
+    static const char _ulog_fmt[] __ulog_rodata = _fmt; \
     static const uint32_t _ulog_tag = ULOG_HASH(_fmt); \
     const ulog_msg_ch_t _ulog_ch = _ch; \
     IF(HAS_ARGS(__VA_ARGS__))( \
-        ulog_dummy_printf(_ulog_fmt, __VA_ARGS__); \
+        ulog_dummy_printf(_fmt, __VA_ARGS__); \
         ULOG_ARGS_ASSERT(__VA_ARGS__); \
         const ulog_arg_t _ulog_arg_list[] = ULOG_ARGS_CREATE(__VA_ARGS__); \
         ulog_print(_ulog_ch, _ulog_tag, _ulog_arg_list, sizeof(_ulog_arg_list) / sizeof(_ulog_arg_list[0])); \
